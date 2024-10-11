@@ -15,4 +15,4 @@ export class service {
   price: number;
 }
 
-export const CatSchema = SchemaFactory.createForClass(service);
+export const ServiceSchema = SchemaFactory.createForClass(service);

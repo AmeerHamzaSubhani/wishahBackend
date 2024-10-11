@@ -41,4 +41,4 @@ export class booking {
   details: string;
 }
 
-export const CatSchema = SchemaFactory.createForClass(booking); 
+export const BookingSchema = SchemaFactory.createForClass(booking); 

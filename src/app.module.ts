@@ -11,8 +11,21 @@ import { BookingModule } from './booking/booking.module';
 import { StaffService } from './staff/staff.service';
 import { StaffModule } from './staff/staff.module';
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost/nest'), AuthModule, ServicesModule, BookingModule, StaffModule],
-  controllers: [AppController, StaffController, BookingController, ServicesController],
+  imports: [
+    MongooseModule.forRoot(
+      'mongodb+srv://subhaniameer:FC6agGWSAowY7i3Q@cluster0.qaeje.mongodb.net/wishahspa',
+    ),
+    AuthModule,
+    ServicesModule,
+    BookingModule,
+    StaffModule,
+  ],
+  controllers: [
+    AppController,
+    StaffController,
+    BookingController,
+    ServicesController,
+  ],
   providers: [AppService, StaffService],
 })
 export class AppModule {}

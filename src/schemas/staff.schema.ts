@@ -25,4 +25,4 @@ export class staff {
   dob: Date;
 }
 
-export const CatSchema = SchemaFactory.createForClass(staff);
+export const StaffSchema = SchemaFactory.createForClass(staff);
