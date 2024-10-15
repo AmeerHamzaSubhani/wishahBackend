@@ -4,11 +4,11 @@ import { AuthController } from './auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
+import { jwtConstants } from '../constants';
 import {
-  UserSettings,
-  UserSettingsSchema,
-} from 'src/schemas/userSetting.schema';
+  RefreshToken,
+  RefreshTokenSchema,
+} from 'src/schemas/refreshToken.schema';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -17,8 +17,8 @@ import {
         schema: UserSchema,
       },
       {
-        name: UserSettings.name,
-        schema: UserSettingsSchema,
+        name: RefreshToken.name,
+        schema: RefreshTokenSchema,
       },
     ]),
     JwtModule.register({

@@ -1,7 +1,10 @@
 import { Type } from 'class-transformer';
 import { IsOptional, IsString, IsNumber } from 'class-validator';
 
-export class ServiceDto {
+export class UpdateServiceDto {
+  @IsOptional()
+  @IsString()
+  id;
   @IsOptional()
   @IsString()
   serviceName: string;

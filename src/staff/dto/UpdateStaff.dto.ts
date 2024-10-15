@@ -4,6 +4,9 @@ import { IsOptional, IsString, IsNumber, IsDate } from 'class-validator';
 export class UpdateStaffDto {
   @IsOptional()
   @IsString()
+  id;
+  @IsOptional()
+  @IsString()
   name: string;
   @IsString()
   @IsOptional()

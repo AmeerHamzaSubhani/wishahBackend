@@ -9,13 +9,15 @@ import {
   HttpException,
   Patch,
   Delete,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from '../auth.guard';
 import { CreateUserDto, userLogin } from './dto/CreateUser.dto';
 import mongoose from 'mongoose';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
+import { RefreshTokenDto } from './dto/RefreshToken.dto';
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -30,12 +32,18 @@ export class AuthController {
   logIn(@Body() userLogin: userLogin) {
     return this.authService.login(userLogin);
   }
+
+  @Post('refreshToken')
+  @UsePipes(new ValidationPipe())
+  refreshToken(@Body() RefreshTokenDto: RefreshTokenDto) {
+    return this.authService.getNewAuthToken(RefreshTokenDto);
+  }
+
   @UseGuards(AuthGuard)
   @Get()
   getUsers() {
     return this.authService.getsUsers();
   }
-
   // users/:id
   @UseGuards(AuthGuard)
   @Get(':id')
@@ -46,7 +54,7 @@ export class AuthController {
     if (!findUser) throw new HttpException('User not found', 404);
     return findUser;
   }
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @Get(':email')
   async getUserByEmail(@Param('email') email: string) {
     const findUser = await this.authService.getUserByEmail(email);
