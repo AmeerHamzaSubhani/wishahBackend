@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type bookingDocument = HydratedDocument<booking>;
+export type bookingDocument = HydratedDocument<Booking>;
 
 @Schema()
-export class booking {
+export class Booking {
   @Prop({ required: true })
   date: Date;
   @Prop({ required: true })
@@ -19,9 +19,9 @@ export class booking {
   therapistName: string;
   @Prop({ required: true })
   startTime: string;
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   endTime: string;
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   clientName: string;
   @Prop({ required: true })
   clientContact: number;
@@ -41,4 +41,4 @@ export class booking {
   details: string;
 }
 
-export const CatSchema = SchemaFactory.createForClass(booking); 
+export const BookingSchema = SchemaFactory.createForClass(Booking); 

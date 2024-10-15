@@ -7,8 +7,10 @@ export type UserDocument = HydratedDocument<User>;
 export class User {
   @Prop({ required: true })
   name: string;
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   email: string;
+  @Prop({ required: true })
+  displayName: string;
   @Prop({ required: true })
   password: string;
   @Prop({ default: false })
@@ -16,5 +18,4 @@ export class User {
   @Prop({ default: false })
   isResp: boolean;
 }
-
-export const CatSchema = SchemaFactory.createForClass(User);
+export const UserSchema = SchemaFactory.createForClass(User);
