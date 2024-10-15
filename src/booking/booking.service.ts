@@ -7,13 +7,4 @@ export class BookingService {
   constructor(
     @InjectModel(Booking.name) private bookingModel: Model<Booking>,
   ) {}
-
-  async createBooking(params:type) => {
-    
-  }
-
-
-  async updateBook(params:type) => {
-    
-  }
 }

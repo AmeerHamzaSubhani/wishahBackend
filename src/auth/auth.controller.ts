@@ -9,10 +9,8 @@ import {
   HttpException,
   Patch,
   Delete,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '../auth.guard';
 import { CreateUserDto, userLogin } from './dto/CreateUser.dto';
 import mongoose from 'mongoose';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
@@ -39,13 +37,13 @@ export class AuthController {
     return this.authService.getNewAuthToken(RefreshTokenDto);
   }
 
-  @UseGuards(AuthGuard)
+ 
   @Get()
   getUsers() {
     return this.authService.getsUsers();
   }
   // users/:id
-  @UseGuards(AuthGuard)
+ 
   @Get(':id')
   async getUserById(@Param('id') id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
@@ -54,14 +52,14 @@ export class AuthController {
     if (!findUser) throw new HttpException('User not found', 404);
     return findUser;
   }
-  // @UseGuards(AuthGuard)
+  //
   @Get(':email')
   async getUserByEmail(@Param('email') email: string) {
     const findUser = await this.authService.getUserByEmail(email);
     if (!findUser) throw new HttpException('User not found', 404);
     return findUser;
   }
-  @UseGuards(AuthGuard)
+ 
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   async updateUser(
@@ -74,7 +72,7 @@ export class AuthController {
     if (!updatedUser) throw new HttpException('User Not Found', 404);
     return updatedUser;
   }
-  @UseGuards(AuthGuard)
+ 
   @Delete(':id')
   async deleteUser(@Param('id') id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
