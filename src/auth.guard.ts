@@ -15,21 +15,26 @@ export class AuthMiddleware implements NestMiddleware {
     if (!token) {
       throw new UnauthorizedException('Token not found');
     }
-
+    console.log('payload', process.env.JWT_SECRET);
     try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
-      req['user'] = payload; // Attach payload to the request object
+      req['user'] = payload;
     } catch (error) {
+      console.log('error', error);
       throw new UnauthorizedException('Invalid token');
     }
 
-    next(); // Proceed to the next middleware or route handler
+    next();
   }
 
-  private extractTokenFromHeader(req: Request): string | undefined {
-    const [type, token] = req.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+  extractTokenFromHeader(req) {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) {
+      return null;
+    }
+    const token = authHeader.split(' ')[1];
+    return token ? token : null;
   }
 }

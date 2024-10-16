@@ -8,7 +8,7 @@ export class RefreshToken {
   @Prop({ required: true, unique: true })
   email: string;
   @Prop({ required: true })
-  Token: string;
+  token: string;
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   userId: string;
   @Prop({ required: true })

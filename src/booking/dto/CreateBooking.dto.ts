@@ -1,4 +1,3 @@
-import { Type } from 'class-transformer';
 import { IsNotEmpty, IsString, IsDate, IsNumber } from 'class-validator';
 
 export class CreateBookingDto {
