@@ -6,11 +6,6 @@ import {
   ValidationPipe,
   Get,
   Query,
-  Param,
-  HttpException,
-  Patch,
-  Delete,
-  UseGuards,
 } from '@nestjs/common';
 import { CreateServiceDto } from './dto/CreateService.dto';
 import { UpdateServiceDto } from './dto/UpdateService.dto';

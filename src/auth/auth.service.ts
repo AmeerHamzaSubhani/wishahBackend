@@ -48,6 +48,7 @@ export class AuthService {
   }
 
   async login({ ...userLogin }: userLogin) {
+    console.log('userLogin', userLogin);
     const existingUser = await this.userModel.findOne({
       email: userLogin.email,
     });
@@ -87,20 +88,68 @@ export class AuthService {
   }
 
   async genrateToken(userId, email) {
-    const payload = {
-      sub: userId,
+    const existingToken = await this.RefreshTokenModel.findOne({
       email: email,
-    };
+    });
+    if (!existingToken) {
+      const payload = {
+        sub: userId,
+        email: email,
+      };
 
-    const access_token = this.jwtService.sign(payload, { expiresIn: '3h' });
-    const refresh_token = uuidv4();
+      const access_token = this.jwtService.sign(payload, {
+        secret: process.env.JWT_SECRET,
+        expiresIn: '3h',
+      });
+      const refresh_token = uuidv4();
 
-    await this.storeRefreshToken(userId, email, refresh_token);
-    console.log('access_token', access_token);
-    return {
-      access_token,
-      refresh_token,
-    };
+      await this.storeRefreshToken(userId, email, refresh_token);
+      console.log('access_token', access_token);
+      return {
+        access_token,
+        refresh_token,
+      };
+    }
+
+    const getToken = await this.RefreshTokenModel.findOne({
+      email: email,
+    });
+    if (getToken) {
+      const user = await this.RefreshTokenModel.findOne({
+        token: getToken.token,
+        email: email,
+      });
+      if (!user) {
+        const deleted = await this.RefreshTokenModel.deleteMany({
+          email: email,
+        });
+        if (deleted.deletedCount > 0) {
+          return {
+            statusCode: 400,
+            success: false,
+            message: 'You have to log in again',
+          };
+        } else {
+          return {
+            statusCode: 400,
+            success: false,
+            message: 'error while fetching',
+          };
+        }
+      } else {
+        const payload = {
+          sub: user.userId,
+          email: user.email,
+        };
+        const access_token = this.jwtService.sign(payload, {
+          secret: process.env.JWT_SECRET,
+          expiresIn: '3h',
+        });
+        const refresh_token = getToken.token;
+
+        return { access_token, refresh_token };
+      }
+    }
   }
 
   async storeRefreshToken(userId, email, refreshToken: string) {
@@ -108,7 +157,7 @@ export class AuthService {
     expireDate.setDate(expireDate.getDate() + 2);
     const newRefreshToken = await this.RefreshTokenModel.create({
       userId,
-      Token: refreshToken,
+      token: refreshToken,
       expiryDate: expireDate,
       email,
     });
@@ -122,25 +171,39 @@ export class AuthService {
     // Await the result of the find query
     console.log('RefreshTokenDto', RefreshTokenDto.refreshToken);
     const user = await this.RefreshTokenModel.findOne({
-      $and: [
-        { Token: RefreshTokenDto.refreshToken },
-        { expiryDate: { $gt: new Date() } },
-      ],
+      token: RefreshTokenDto.refreshToken,
+      email: RefreshTokenDto.email,
     });
     console.log('user', user);
     // Check if the user array is empty
     if (!user) {
-      return {
-        success: false,
-        message: 'You have to log in again',
-      };
+      const deleted = await this.RefreshTokenModel.deleteMany({
+        email: RefreshTokenDto.email,
+      });
+      if (deleted.deletedCount > 0) {
+        return {
+          statusCode: 400,
+          success: false,
+          message: 'You have to log in again',
+        };
+      } else {
+        return {
+          statusCode: 400,
+          success: false,
+          message: 'error while fetching',
+        };
+      }
     } else {
       const payload = {
         sub: user.userId,
         email: user.email,
       };
-      const access_token = this.jwtService.sign(payload, { expiresIn: '3h' });
+      const access_token = this.jwtService.sign(payload, {
+        secret: process.env.JWT_SECRET,
+        expiresIn: '3h',
+      });
       return {
+        statusCode: 200,
         success: true,
         message: 'Data found successfully',
         data: {

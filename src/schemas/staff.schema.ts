@@ -7,7 +7,7 @@ export type staffDocument = HydratedDocument<staff>;
 export class staff {
   @Prop({ required: true })
   name: string;
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   email: string;
   @Prop({ required: true })
   gender: string;
@@ -17,12 +17,12 @@ export class staff {
   currentAddress: string;
   @Prop({ required: true })
   designation: string;
-  @Prop({ required: true })
-  staffId: string;
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   contact: number;
   @Prop({ required: true })
   dob: Date;
+  staffId: string;
+  imageUrl?: string;
 }
 
 export const StaffSchema = SchemaFactory.createForClass(staff);
