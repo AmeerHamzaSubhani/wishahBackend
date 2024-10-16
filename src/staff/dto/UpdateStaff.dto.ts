@@ -32,4 +32,6 @@ export class UpdateStaffDto {
   @IsDate()
   @IsOptional()
   dob: Date;
+  @IsOptional()
+  imageUrl?: string;
 }

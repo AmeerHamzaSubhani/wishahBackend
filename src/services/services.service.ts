@@ -19,6 +19,7 @@ export class ServicesService {
     });
     if (existingService) {
       return {
+        statusCode: 400,
         success: false,
         message: 'service already exists',
       };
@@ -27,6 +28,7 @@ export class ServicesService {
       console.log('createdService', createdService);
       if (createdService) {
         return {
+          statusCode: 200,
           success: true,
           message: 'service created successfully',
           data: createdService,
@@ -49,15 +51,27 @@ export class ServicesService {
       .find(query)
       .skip((currentPage - 1) * pageLimit)
       .limit(pageLimit);
-
-    return {
-      success: true,
-      message: 'Got all services successfully',
-      data: services,
-      total,
-      totalPages: Math.ceil(total / pageLimit),
-      currentPage: currentPage,
-    };
+    if (services.length === 0) {
+      return {
+        statusCode: 200,
+        success: true,
+        message: 'No services found',
+        data: services,
+        total,
+        totalPages: Math.ceil(total / pageLimit),
+        currentPage: currentPage,
+      };
+    } else {
+      return {
+        statusCode: 200,
+        success: true,
+        message: 'Got all services successfully',
+        data: services,
+        total,
+        totalPages: Math.ceil(total / pageLimit),
+        currentPage: currentPage,
+      };
+    }
   }
 
   async getServiceById() {}
@@ -68,6 +82,7 @@ export class ServicesService {
       { new: true },
     );
     return {
+      statusCode: 200,
       success: true,
       message: 'service updated successfully',
       data: updatedService,
@@ -78,6 +93,7 @@ export class ServicesService {
       UpdateService._id,
     );
     return {
+      statusCode: 200,
       success: true,
       message: 'service deleted successfully',
       data: deletedService,
