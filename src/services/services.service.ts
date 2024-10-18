@@ -25,13 +25,15 @@ export class ServicesService {
       };
     } else {
       const createdService = await this.serviceModel.create(createService);
-      console.log('createdService', createdService);
+      const allServices = await this.serviceModel.find();
+      console.log('createdService', allServices);
       if (createdService) {
         return {
           statusCode: 200,
           success: true,
           message: 'service created successfully',
           data: createdService,
+          updatedDate: allServices,
         };
       }
     }
@@ -88,15 +90,25 @@ export class ServicesService {
       data: updatedService,
     };
   }
-  async deleteService(UpdateService) {
+  async deleteService(DeleteServiceDto) {
     const deletedService = await this.serviceModel.findByIdAndDelete(
-      UpdateService._id,
+      DeleteServiceDto.id,
     );
+    console.log('deletedService', deletedService);
+    if (!deletedService) {
+      return {
+        statusCode: 400,
+        success: false,
+        message: 'service not found',
+      };
+    }
+    const updateData = await this.serviceModel.find();
     return {
       statusCode: 200,
       success: true,
       message: 'service deleted successfully',
       data: deletedService,
+      updateData: updateData,
     };
   }
 }

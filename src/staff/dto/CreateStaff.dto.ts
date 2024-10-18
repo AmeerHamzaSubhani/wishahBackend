@@ -26,6 +26,8 @@ export class CreateStaffDto {
   @IsNotEmpty()
   @IsString()
   designation: string;
+  @IsNotEmpty()
+  @IsString()
   staffId: string;
   @IsNotEmpty()
   @IsNumber()
