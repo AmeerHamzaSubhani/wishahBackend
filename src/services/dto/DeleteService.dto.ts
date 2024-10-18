@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-export class DeleteStaffDto {
+
+export class DeleteServiceDto {
   @IsNotEmpty()
   @IsString()
   id: string;

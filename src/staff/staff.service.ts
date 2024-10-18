@@ -4,6 +4,8 @@ import { Model } from 'mongoose';
 import { staff } from 'src/schemas/staff.schema';
 import { CreateStaffDto } from './dto/CreateStaff.dto';
 import { UpdateStaffDto } from './dto/UpdateStaff.dto';
+import { DeleteStaffDto } from './dto/DeleteStaff.dto';
+// import { GetStaffDto } from './dto/GetStaff.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 @Injectable()
@@ -18,9 +20,6 @@ export class StaffService {
     file?: Express.Multer.File,
   ) {
     try {
-      const staffId = uuidv4();
-
-      createStaffDto.staffId = staffId;
       const existingStaff = await this.staffModel.findOne({
         email: createStaffDto.email,
         contact: createStaffDto.contact,
@@ -97,10 +96,10 @@ export class StaffService {
     }
   }
 
-  async deleteStaff(UpdateStaff) {
+  async deleteStaff({ ...DeleteStaffDto }: DeleteStaffDto) {
     try {
       const deletedStaff = await this.staffModel.findByIdAndDelete(
-        UpdateStaff._id,
+        DeleteStaffDto.id,
       );
       if (!deletedStaff) {
         return {
